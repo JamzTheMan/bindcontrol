@@ -75,3 +75,27 @@ jobs:
         with:
           name: BindControl-1.0.0-beta-${{ runner.os }}
           path: dist/BindControl/*
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+#          tag_name: ${{ github.ref }}
+          tag_name: 1.0.0-beta
+#          release_name: Release ${{ github.ref }}
+          release_name: Release 1.0.0-beta
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload_release_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/BindControl/BindControl-1.0.0-beta-${{ runner.os }}.zip
+          asset_name: BindControl-1.0.0-beta-${{ runner.os }}.zip
+          asset_content_type: application/zip
