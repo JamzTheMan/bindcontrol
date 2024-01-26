@@ -74,8 +74,8 @@ jobs:
           cd dist
           dir BindControl
 
-#    - name: Upload Artifact
-#      uses: actions/upload-artifact@v2
-#      with:
-#        name: bindcontrol_windows
-#        path: dist/bindcontrol-1.0.0-beta.zip
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: bindcontrol_1.0.0-beta_${{ runner.os }}
+          path: dist/BindControl/*
