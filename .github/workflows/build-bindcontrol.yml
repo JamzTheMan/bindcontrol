@@ -17,6 +17,7 @@ jobs:
   build:
     name: Build, Test & Package
     strategy:
+      fail-fast: false
       matrix:
         os: [ ubuntu-latest, windows-latest ]
     runs-on: ${{ matrix.os }}
@@ -71,10 +72,12 @@ jobs:
           dir dist/BindControl
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: BindControl-1.0.0-beta-${{ runner.os }}
-          path: dist/BindControl/*
+          path: dist/BindControl/
+          compression-level: 1
+          overwrite: true
 
       - name: Create Release
         id: create_release
