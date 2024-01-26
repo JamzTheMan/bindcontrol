@@ -26,7 +26,7 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
         with:
-          python-version: "3.10"
+          python-version: "3.11"
       - name: Cache pip dependencies
         uses: actions/cache@v2
         with:
@@ -63,19 +63,15 @@ jobs:
       - name: Verify Build (Ubuntu)
         if: runner.os == 'Linux'
         run: |
-          ls -la dist
-          cd dist
-          ls -la BindControl
+          ls -la dist/BindControl
 
       - name: Verify Build (Windows)
         if: runner.os == 'Windows'
         run: |
-          dir dist
-          cd dist
-          dir BindControl
+          dir dist/BindControl
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: bindcontrol_1.0.0-beta_${{ runner.os }}
+          name: BindControl-1.0.0-beta-${{ runner.os }}
           path: dist/BindControl/*
