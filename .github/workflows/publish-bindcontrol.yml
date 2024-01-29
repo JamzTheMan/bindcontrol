@@ -59,7 +59,7 @@ jobs:
           directory: './dist'
           filename: '${{ env.FILE_NAME }}'
 
-      - name: Verify Files
+      - name: Verify Build
         run: |
           ${{ matrix.CMD_VERIFY }}
 
