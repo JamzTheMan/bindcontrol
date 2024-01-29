@@ -75,4 +75,4 @@ jobs:
           tag: ${{ github.ref }}
           overwrite: true
           release_name: "BindControl ${{ github.ref_name }}"
-          body: "${{ env.COMMIT_MESSAGES }}"
+          body: "Test: ${{ env.COMMIT_MESSAGES }}"
