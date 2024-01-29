@@ -42,10 +42,11 @@ jobs:
         run: |
           dir dist/BindControl
 
-      - name: 7zip Artifacts
-        uses: edgarrc/action-7z@v1
+      - name: create-7z-action
+        uses: DuckSoft/create-7z-action@v1.0
         with:
-          args: 7z .dist/BindControl-v1.0.15-alpha_windows.zip ./dist/BindControl
+          pathSource: dist/BindControl
+          pathTarget: dist/BindControl-v1.0.16-alpha_windows.zip
 
       - name: Verify Zip
         run: |
