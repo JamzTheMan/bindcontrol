@@ -1,9 +1,9 @@
-name: Publish
+name: Build & Release
 
 on:
   push:
     tags:
-      - '*'
+      - 'v*' # Push events matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
@@ -11,12 +11,44 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-      - name: Build
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install Tools & Dependencies
         run: |
-          mkdir dist
-          echo "test build" > ./dist/release-test.txt
+          python -m pip install --upgrade pip
+          pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython --user
+          pip install pyinstaller -r requirements.txt
+          
+      - name: Create Executable
+        run: |
+          echo "1.0.0-beta" > version.txt
+          pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
+
+      - name: Verify & Zip Build Artifacts
+        run: |
+          cd dist
+          dir BindControl
+          zip BindControl-%VERSION%-windows.zip BindControl
+          dir
+
+#      - name: Build
+#        run: |
+#          mkdir dist
+#          echo "test build" > ./dist/release-test.txt
 
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
