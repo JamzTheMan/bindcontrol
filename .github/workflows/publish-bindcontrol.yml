@@ -59,7 +59,7 @@ jobs:
       - name: Get latest commit message
         shell: bash
         run: |
-          echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGES=$(git log $(git describe --tags --abbrev=0)..HEAD --pretty=format:%B)" >> $GITHUB_ENV
 
       - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
