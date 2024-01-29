@@ -20,7 +20,6 @@ jobs:
             CMD_BUILD: pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
             CMD_VERIFY: ls -la dist/BindControl
             FILE_NAME: BindControl-${{ github.ref_name }}_${{ runner.os }}.zip
-
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -45,7 +44,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython --user
           pip install pyinstaller -r requirements.txt
-          
+
       - name: Create Executable
         run: |
           echo "${{ github.ref_name }}" > version.txt
@@ -58,7 +57,7 @@ jobs:
           directory: './dist'
           filename: '${{ matrix.FILE_NAME }}'
 
-      - name: Verify Build
+      - name: Verify Files
         run: |
           ${{ matrix.CMD_VERIFY }}
 
