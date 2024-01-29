@@ -52,7 +52,7 @@ jobs:
         uses: DuckSoft/create-7z-action@v1.0
         with:
           pathSource: dist/BindControl/
-          pathTarget: dist/BindControl-v1.0.23-alpha_windows.zip
+          pathTarget: dist/BindControl-${{ github.ref_name }}_windows.zip
 
       - name: Verify Zip
         run: |
@@ -63,8 +63,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/BindControl-v1.0.23-alpha_windows.zip
-          asset_name: BindControl-v1.0.23-alpha_windows.zip
+          file: dist/BindControl-${{ github.ref_name }}_windows.zip
+          asset_name: BindControl-${{ github.ref_name }}_windows.zip
           tag: ${{ github.ref }}
           overwrite: true
           body: "This is my ${{ github.ref_name }} release text."
