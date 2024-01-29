@@ -46,7 +46,7 @@ jobs:
         uses: DuckSoft/create-7z-action@v1.0
         with:
           pathSource: dist/BindControl
-          pathTarget: dist/BindControl-v1.0.16-alpha_windows.zip
+          pathTarget: dist/BindControl-v1.0.17-alpha_windows.zip
 
       - name: Verify Zip
         run: |
