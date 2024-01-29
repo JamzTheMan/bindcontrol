@@ -8,7 +8,14 @@ on:
 jobs:
   build:
     name: Build & Release
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            CMD_BUILD: pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
+            CMD_VERIFY: dir dist/BindControl
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout Repository
@@ -36,31 +43,30 @@ jobs:
       - name: Create Executable
         run: |
           echo "${{ github.ref_name }}" > version.txt
-          pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
+          ${{ matrix.CMD_BUILD }}
 
       - name: Create Zip Archive
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
           directory: './dist'
-          filename: 'BindControl-${{ github.ref_name }}_windows.zip'
+          filename: 'BindControl-${{ github.ref_name }}_${{ runner.os }}.zip'
 
       - name: Verify Files
         run: |
-          dir dist/BindControl
-          dir dist
+          ${{ matrix.CMD_VERIFY }}
 
       - name: Get latest commit message
         shell: bash
         run: |
           echo "COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> $GITHUB_ENV
 
-      - name: Upload binaries to release
+      - name: Upload Release Asset
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/BindControl-${{ github.ref_name }}_windows.zip
-          asset_name: BindControl-${{ github.ref_name }}_windows.zip
+          file: dist/BindControl-${{ github.ref_name }}_${{ runner.os }}.zip
+          asset_name: BindControl-${{ github.ref_name }}_${{ runner.os }}.zip
           tag: ${{ github.ref }}
           overwrite: true
           release_name: "BindControl ${{ github.ref_name }}"
