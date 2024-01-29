@@ -14,12 +14,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set Release Version from Tag
-        shell: bash
-        run: |
-          echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-          echo "This is my ${{ env.RELEASE_VERSION }} release text."
-
       - name: Set up Python 3.10
         uses: actions/setup-python@v3
         with:
@@ -41,20 +35,23 @@ jobs:
           
       - name: Create Executable
         run: |
-          echo "1.0.0-beta" > version.txt
+          echo "${{ github.ref_name }}" > version.txt
           pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
 
-      - name: Verify Executable
-        run: |
-          dir dist/BindControl
+#      - name: Create Zip Archive
+#        uses: DuckSoft/create-7z-action@v1.0
+#        with:
+#          pathSource: dist/BindControl/
+#          pathTarget: dist/BindControl-${{ github.ref_name }}_windows.zip
 
-      - name: create-7z-action
-        uses: DuckSoft/create-7z-action@v1.0
+      - name: Create Zip Archive
+        uses: thedoctor0/zip-release@0.7.6
         with:
-          pathSource: dist/BindControl/
-          pathTarget: dist/BindControl-${{ github.ref_name }}_windows.zip
+          type: 'zip'
+          directory: 'dist/BindControl'
+          filename: 'dist/BindControl-${{ github.ref_name }}_windows.zip'
 
-      - name: Verify Zip
+      - name: Verify Files
         run: |
           dir dist/BindControl
           dir dist
