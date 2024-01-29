@@ -56,7 +56,7 @@ jobs:
         with:
           type: 'zip'
           directory: './dist'
-          filename: '${{ env.FILE_NAME }}'
+          filename: '${{ matrix.FILE_NAME }}'
 
       - name: Verify Build
         run: |
@@ -71,8 +71,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/${{ env.FILE_NAME }}
-          asset_name: ${{ env.FILE_NAME }}
+          file: dist/${{ matrix.FILE_NAME }}
+          asset_name: ${{ matrix.FILE_NAME }}
           tag: ${{ github.ref }}
           overwrite: true
           release_name: "BindControl ${{ github.ref_name }}"
