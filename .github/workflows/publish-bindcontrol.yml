@@ -5,9 +5,6 @@ on:
     tags:
       - 'v*' # Push events matching v*, i.e. v1.0, v20.15.10
 
-env:
-  FILE_NAME: BindControl-${{ github.ref_name }}_${{ runner.os | lower }}.zip
-
 jobs:
   build:
     name: Build & Release
@@ -21,7 +18,11 @@ jobs:
           - os: ubuntu-latest
             CMD_BUILD: pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
             CMD_VERIFY: ls -la dist/BindControl
+
     runs-on: ${{ matrix.os }}
+
+    env:
+      FILE_NAME: BindControl-${{ github.ref_name }}_${{ runner.os | lower }}.zip
 
     steps:
       - name: Checkout Repository
