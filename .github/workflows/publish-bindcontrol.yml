@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Publish binaries
+    name: Build & Release
     runs-on: windows-latest
 
     steps:
@@ -48,8 +48,8 @@ jobs:
         uses: thedoctor0/zip-release@0.7.6
         with:
           type: 'zip'
-          directory: 'dist/BindControl'
-          filename: 'dist/BindControl-${{ github.ref_name }}_windows.zip'
+          directory: './dist'
+          filename: 'BindControl-${{ github.ref_name }}_windows.zip'
 
       - name: Verify Files
         run: |
