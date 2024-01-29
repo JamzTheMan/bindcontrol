@@ -42,7 +42,7 @@ jobs:
         run: |
           cd dist
           dir BindControl
-          zip BindControl-%VERSION%-windows.zip BindControl
+          zip BindControl-v1.0.14-alpha-windows.zip BindControl
           dir
 
 #      - name: Build
@@ -54,7 +54,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ./dist/release-test.txt
+          file: ./dist/BindControl-*.zip
           asset_name: release-test
           tag: ${{ github.ref }}
           overwrite: true
