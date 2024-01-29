@@ -68,7 +68,7 @@ jobs:
             TARGET: windows
             CMD_BUILD: pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
             CMD_VERIFY:  dir dist/BindControl
-            OUT_FILE_NAME: BindControl-${{ GITHUB_REF#refs/tags/ }}-windows.zip
+            OUT_FILE_NAME: BindControl-${{ github.ref }}-windows.zip
 #            ASSET_MIME: application/vnd.microsoft.portable-executable
             ASSET_MIME: application/zip
     runs-on: ${{ matrix.os }}
