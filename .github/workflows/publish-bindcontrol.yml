@@ -13,13 +13,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build
-        run: echo "test buld" > target/release/mything.txt
+        run: echo "test build" > ./dist/release-test.txt
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: target/release/mything.txt
-          asset_name: mything
+          file: ./dist/release-test.txt
+          asset_name: release-test
           tag: ${{ github.ref }}
           overwrite: true
           body: "This is my release text"
