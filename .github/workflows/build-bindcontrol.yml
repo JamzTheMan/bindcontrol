@@ -44,6 +44,8 @@ jobs:
         with:
           name: release_url
           path: release_url.txt
+      - name: Print upload_url
+        run: cat release_url.txt
 
   Build:
     name: Build, Test & Package
@@ -66,7 +68,7 @@ jobs:
             TARGET: windows
             CMD_BUILD: pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
             CMD_VERIFY:  dir dist/BindControl
-            OUT_FILE_NAME: BindControl-${GITHUB_REF#refs/tags/}-windows.zip
+            OUT_FILE_NAME: BindControl-${{ GITHUB_REF#refs/tags/ }}-windows.zip
 #            ASSET_MIME: application/vnd.microsoft.portable-executable
             ASSET_MIME: application/zip
     runs-on: ${{ matrix.os }}
@@ -129,6 +131,7 @@ jobs:
         shell: bash
         run: |
           value=`cat release_url/release_url.txt`
+#          echo "::set-output name=upload_url::$value"
           echo "{upload_url}={$value}" >> $GITHUB_OUTPUT
 
 #      - name: Upload Artifact
@@ -149,6 +152,10 @@ jobs:
           asset_path: ./dist/BindControl/
           asset_name: ${{ matrix.OUT_FILE_NAME }}
           asset_content_type: ${{ matrix.ASSET_MIME }}
+
+      - name: Print downloaded upload_url
+        shell: bash
+        run: cat release_url/release_url.txt
 
 #      - name: Upload Artifact
 #        uses: actions/upload-artifact@v4
