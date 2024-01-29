@@ -15,6 +15,7 @@ jobs:
           - os: windows-latest
             CMD_BUILD: pyinstaller -i icons/BindControl.ico --noconsole --noconfirm --clean --add-data icons:icons --add-data Help:Help --add-data version.txt:. --exclude-module _bz2 --exclude-module _ctypes --exclude-module _decimal --exclude-module _hashlib --exclude-module _lzma --exclude-module _socket --exclude-module _ssl BindControl.py
             CMD_VERIFY: dir dist/BindControl
+            FILE_NAME: BindControl-${{ github.ref_name }}_${{ runner.os | lower }}.zip
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -50,7 +51,7 @@ jobs:
         with:
           type: 'zip'
           directory: './dist'
-          filename: 'BindControl-${{ github.ref_name }}_${{ runner.os }}.zip'
+          filename: '${{ matrix.FILE_NAME }}'
 
       - name: Verify Files
         run: |
@@ -65,9 +66,9 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: dist/BindControl-${{ github.ref_name }}_${{ runner.os }}.zip
-          asset_name: BindControl-${{ github.ref_name }}_${{ runner.os }}.zip
+          file: dist/${{ matrix.FILE_NAME }}
+          asset_name: ${{ matrix.FILE_NAME }}
           tag: ${{ github.ref }}
           overwrite: true
           release_name: "BindControl ${{ github.ref_name }}"
-          body: "${{ env.COMMIT_MESSAGE }}"
+          body: "${{ env.COMMIT_MESSAGES }}"
